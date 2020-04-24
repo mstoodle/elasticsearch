@@ -117,11 +117,15 @@ final class JvmErgonomics {
 
     // package private for testing
     static Long extractHeapSize(final Map<String, Optional<String>> finalJvmOptions) {
-        return Long.parseLong(finalJvmOptions.get("MaxHeapSize").get());
+        var o = finalJvmOptions.get("MaxHeapSize").get();
+        if (o != null) return Long.parseLong(o);
+        return Runtime.getRuntime().maxMemory();
     }
 
     static long extractMaxDirectMemorySize(final Map<String, Optional<String>> finalJvmOptions) {
-        return Long.parseLong(finalJvmOptions.get("MaxDirectMemorySize").get());
+        var o = finalJvmOptions.get("MaxDirectMemorySize").get();
+        if (o != null) return Long.parseLong(o);
+        return 0L;
     }
 
     private static final Pattern SYSTEM_PROPERTY = Pattern.compile("^-D(?<key>[\\w+].*?)=(?<value>.*)$");
